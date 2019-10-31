@@ -1,5 +1,5 @@
 #pragma once
-#include "project.hpp"
+#include "application.hpp"
 
 class ProjectExample : public Project
 {

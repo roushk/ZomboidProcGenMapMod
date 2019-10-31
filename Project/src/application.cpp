@@ -3,6 +3,9 @@
 
 #include "project_example.hpp"
 
+int Application::windowHeight = 600;
+int Application::windowWidth = 800;
+
 Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
   : window_instance(hInstance)
 {
@@ -23,10 +26,10 @@ Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
 
   // store info 1280×720
   RECT rect = { 350, 100, 350 + windowWidth, 100 + windowHeight };
-  AdjustWindowRect(&rect, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+  AdjustWindowRect(&rect, WS_THICKFRAME ^ WS_CAPTION, FALSE);
   window_handle = CreateWindow("Application",  // Window to create (matches wc window name string)
                                "MAT300 Project", // Title bar text
-                               WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, // Window buttons
+                               WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_THICKFRAME, // Window buttons
                                100, // window left position
                                50, // window top position
                                windowWidth, // window width
@@ -316,7 +319,32 @@ LRESULT Application::win_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return 0;
   } break;
-    // Handle messages
+  case WM_SIZE: { // On Resize
+    d3d_device_context->OMSetRenderTargets(0, 0, 0);
+    main_render_target_view->Release();
+
+    HRESULT hr = swap_chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+    {
+      Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
+      swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+      d3d_device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, main_render_target_view.GetAddressOf());
+    }
+
+    d3d_device_context->OMSetRenderTargets(1, main_render_target_view.GetAddressOf(), nullptr);
+
+    D3D11_VIEWPORT vp;
+    vp.Width = LOWORD(lParam);
+    vp.Height = HIWORD(lParam);
+    vp.MinDepth = 0.f;
+    vp.MaxDepth = 1.f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    d3d_device_context->RSSetViewports(1, &vp);
+
+    windowWidth = static_cast<int>(LOWORD(lParam));
+    windowHeight = static_cast<int>(HIWORD(lParam));
+  }
   default:
     break; // do nothing
   }

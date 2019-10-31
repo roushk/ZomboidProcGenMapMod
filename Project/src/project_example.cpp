@@ -61,7 +61,7 @@ void ProjectExample::draw_editors()
   {
     // Create Editor window (Just an example editor window that scales with what is currently inside of it,
     // can definitely change to be whatever you want, this is just a hacky quick version that works).
-    ImGui::SetNextWindowPos({ 5.f, 555.f - windowSize.y }); //TODO: Change hard coded window position to scale with window size changes
+    ImGui::SetNextWindowPos({ 5.f, Application::WindowHeight() - windowSize.y - 5.f }); //TODO: Change hard coded window position to scale with window size changes
     ImGui::SetNextWindowBgAlpha(0.2f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);

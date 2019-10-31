@@ -7,9 +7,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR lpCmdLine,
                    int nCmdShow)
 {
-  Application app(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
-
-  app.run();
+  Application(hInstance, hPrevInstance, lpCmdLine, nCmdShow).run();
 
   return EXIT_SUCCESS;
 }

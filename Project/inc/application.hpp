@@ -9,6 +9,16 @@ public:
 
   void run();
 
+  static int WindowWidth()
+  {
+    return windowWidth;
+  }
+
+  static int WindowHeight()
+  {
+    return windowHeight;
+  }
+
 private:
   float draw_menu_bar();
 
@@ -34,8 +44,8 @@ private:
   Project* currentProject = nullptr;
 
   bool running = true;
-  const int windowWidth = 800;
-  const int windowHeight = 600;
+  static int windowWidth;
+  static int windowHeight;
 
   bool performanceController = false;
 };
