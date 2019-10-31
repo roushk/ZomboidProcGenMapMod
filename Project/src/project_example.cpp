@@ -29,26 +29,17 @@ void ProjectExample::draw()
 
   if (drawBox)
   {
-    // Draw line on top of drawable screen
-    drawList->AddLine({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowTopDrawBound }, boxColorPacked);
-
-    // Draw line on bottom of drawable screen
-    drawList->AddLine({ windowLeftDrawBound, windowBottomDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked);
-
-    // Draw line on left of drawable screen
-    drawList->AddLine({ windowLeftDrawBound, windowTopDrawBound }, { windowLeftDrawBound, windowBottomDrawBound }, boxColorPacked);
-
-    // Draw line on right of drawable screen
-    drawList->AddLine({ windowRightDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked);
+    // Draw rectum
+    drawList->AddRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, 5.0f, ImDrawCornerFlags_::ImDrawCornerFlags_All, 5.0f);
   }
 
   if (drawCircle)
   {
     // Draw a sphere in the center
     if (const auto mousePos = ImGui::GetMousePos(); imgui_point_circle(mousePos, { windowHorizontalCenter, windowVerticalCenter }, circleRadius))
-      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, 128);
+      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, circleDivisions);
     else
-      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, 128);
+      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, circleDivisions);
   }
 }
 
@@ -59,9 +50,8 @@ void ProjectExample::draw_editors()
   // Only show editor window if any editor buttons are active
   if (toggleDrawBox || toggleDrawCircle || showMousePosition)
   {
-    // Create Editor window (Just an example editor window that scales with what is currently inside of it,
-    // can definitely change to be whatever you want, this is just a hacky quick version that works).
-    ImGui::SetNextWindowPos({ 5.f, Application::WindowHeight() - windowSize.y - 5.f }); //TODO: Change hard coded window position to scale with window size changes
+    // Create Editor window
+    ImGui::SetNextWindowPos({ 5.f, Application::WindowHeight() - windowSize.y - 5.f });
     ImGui::SetNextWindowBgAlpha(0.2f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
@@ -78,7 +68,10 @@ void ProjectExample::draw_editors()
       {
         ImGui::Checkbox("Toggle Circle", &drawCircle);
         if (drawCircle)
+        {
           ImGui::SliderFloat("Circle Radius", &circleRadius, 1.f, 250.f);
+          ImGui::SliderInt("Circle Divisions", &circleDivisions, 8, 256);
+        }
       }
 
       if (showMousePosition)

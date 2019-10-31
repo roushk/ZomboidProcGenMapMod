@@ -18,6 +18,7 @@ private:
   bool drawBox = true, toggleDrawBox = true;
   bool drawCircle = true, toggleDrawCircle = true;
   float circleRadius = 15.f;
+  int circleDivisions = 128;
   bool showMousePosition = true;
 
   // A set of solid colors for drawing onto a dark gray background
