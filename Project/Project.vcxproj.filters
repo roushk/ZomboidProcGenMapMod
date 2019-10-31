@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{d57c14e3-5a00-423e-97c8-bdd2f2ae08d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Projects">
+      <UniqueIdentifier>{c568ad65-1474-4095-be6c-88f05654c882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{73bcdc02-c612-4004-a575-e3440ea2b706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries">
+      <UniqueIdentifier>{a7cf2155-1f58-4432-b8fa-63120e984a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries\Dear ImGui">
+      <UniqueIdentifier>{8b7c76d3-f04e-46f1-9977-042ce6a27a20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries\fmt">
+      <UniqueIdentifier>{25d7f02d-dabe-47a9-b315-3900ebc03d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{9e65b0cb-9b7a-4bc9-867d-75c14e99ef07}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ext\imgui\imgui.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_demo.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_draw.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_impl_dx11.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_impl_win32.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_widgets.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\fmt\posix.cc">
+      <Filter>External Libraries\fmt</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\fmt\format.cc">
+      <Filter>External Libraries\fmt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="src\application.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\project_example.cpp">
+      <Filter>Projects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ext\imgui\imgui.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imgui_impl_dx11.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imgui_impl_win32.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imgui_internal.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imstb_rectpack.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imstb_textedit.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imstb_truetype.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\imgui\imconfig.h">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\locale.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\ostream.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\posix.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\printf.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\ranges.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\time.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\chrono.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\color.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\core.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\format.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\fmt\format-inl.h">
+      <Filter>External Libraries\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\imgui_distance.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\enumerate.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\pch.hpp">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\project.hpp">
+      <Filter>Projects</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\application.hpp">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\pascal_identity.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\project_example.hpp">
+      <Filter>Projects</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
