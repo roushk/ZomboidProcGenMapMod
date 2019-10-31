@@ -30,7 +30,7 @@ void ProjectExample::draw()
 
   if (drawBox)
   {
-    // Draw rectum
+    // Draw rect
     drawList->AddRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, boxRounding, ImDrawCornerFlags_::ImDrawCornerFlags_All, boxThickness);
   }
 
