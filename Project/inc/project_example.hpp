@@ -16,6 +16,8 @@ public:
 
 private:
   bool drawBox = true, toggleDrawBox = true;
+  float boxRounding = 5.0f;
+  float boxThickness = 5.0f;
   bool drawCircle = true, toggleDrawCircle = true;
   float circleRadius = 15.f;
   int circleDivisions = 128;

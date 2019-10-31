@@ -28,7 +28,7 @@ Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
   RECT rect = { 350, 100, 350 + windowWidth, 100 + windowHeight };
   AdjustWindowRect(&rect, WS_THICKFRAME ^ WS_CAPTION, FALSE);
   window_handle = CreateWindow("Application",  // Window to create (matches wc window name string)
-                               "MAT300 Project", // Title bar text
+                               "ImGui 2D Renderer Framework", // Title bar text
                                WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_THICKFRAME, // Window buttons
                                100, // window left position
                                50, // window top position

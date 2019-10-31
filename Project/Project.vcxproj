@@ -222,8 +222,8 @@
     <ClInclude Include="ext\imgui\imstb_truetype.h" />
     <ClInclude Include="inc\application.hpp" />
     <ClInclude Include="inc\enumerate.hpp" />
+    <ClInclude Include="inc\imgui_disabled.hpp" />
     <ClInclude Include="inc\imgui_distance.hpp" />
-    <ClInclude Include="inc\pascal_identity.hpp" />
     <ClInclude Include="inc\pch.hpp" />
     <ClInclude Include="inc\project.hpp" />
     <ClInclude Include="inc\project_example.hpp" />

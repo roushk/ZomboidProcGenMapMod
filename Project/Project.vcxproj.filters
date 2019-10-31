@@ -134,11 +134,11 @@
     <ClInclude Include="inc\application.hpp">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="inc\pascal_identity.hpp">
-      <Filter>Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="inc\project_example.hpp">
       <Filter>Projects</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\imgui_disabled.hpp">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

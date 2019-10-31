@@ -2,6 +2,7 @@
 #include "project_example.hpp"
 
 #include "imgui_distance.hpp"
+#include "imgui_disabled.hpp"
 
 ProjectExample::ProjectExample()
 {
@@ -30,7 +31,7 @@ void ProjectExample::draw()
   if (drawBox)
   {
     // Draw rectum
-    drawList->AddRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, 5.0f, ImDrawCornerFlags_::ImDrawCornerFlags_All, 5.0f);
+    drawList->AddRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, boxRounding, ImDrawCornerFlags_::ImDrawCornerFlags_All, boxThickness);
   }
 
   if (drawCircle)
@@ -38,7 +39,7 @@ void ProjectExample::draw()
     // Draw a sphere in the center
     if (const auto mousePos = ImGui::GetMousePos(); imgui_point_circle(mousePos, { windowHorizontalCenter, windowVerticalCenter }, circleRadius))
       drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, circleDivisions);
-    else
+    else 
       drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, circleDivisions);
   }
 }
@@ -62,12 +63,17 @@ void ProjectExample::draw_editors()
       if (toggleDrawBox)
       {
         ImGui::Checkbox("Toggle Box", &drawBox);
+        if (IMGUI_DISABLED(drawBox))
+        {
+          ImGui::SliderFloat("Box Rounding", &boxRounding, 0.f, 25.f);
+          ImGui::SliderFloat("Box Thickness", &boxThickness, 0.f, 25.f);
+        }
       }
 
       if (toggleDrawCircle)
       {
         ImGui::Checkbox("Toggle Circle", &drawCircle);
-        if (drawCircle)
+        if (IMGUI_DISABLED(drawCircle))
         {
           ImGui::SliderFloat("Circle Radius", &circleRadius, 1.f, 250.f);
           ImGui::SliderInt("Circle Divisions", &circleDivisions, 8, 256);
