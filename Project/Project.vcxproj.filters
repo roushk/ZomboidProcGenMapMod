@@ -7,9 +7,6 @@
     <Filter Include="Projects">
       <UniqueIdentifier>{c568ad65-1474-4095-be6c-88f05654c882}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Helpers">
-      <UniqueIdentifier>{73bcdc02-c612-4004-a575-e3440ea2b706}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries">
       <UniqueIdentifier>{a7cf2155-1f58-4432-b8fa-63120e984a97}</UniqueIdentifier>
     </Filter>
@@ -21,6 +18,9 @@
     </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{9e65b0cb-9b7a-4bc9-867d-75c14e99ef07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{73bcdc02-c612-4004-a575-e3440ea2b706}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="src\project_example.cpp">
       <Filter>Projects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_render_lib.cpp">
+      <Filter>Lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,10 +123,10 @@
       <Filter>External Libraries\fmt</Filter>
     </ClInclude>
     <ClInclude Include="inc\imgui_distance.hpp">
-      <Filter>Helpers</Filter>
+      <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="inc\enumerate.hpp">
-      <Filter>Helpers</Filter>
+      <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="inc\pch.hpp">
       <Filter>Precompiled</Filter>
@@ -138,7 +141,10 @@
       <Filter>Projects</Filter>
     </ClInclude>
     <ClInclude Include="inc\imgui_disabled.hpp">
-      <Filter>Helpers</Filter>
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\imgui_render_lib.hpp">
+      <Filter>Lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

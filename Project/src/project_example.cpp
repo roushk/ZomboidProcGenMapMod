@@ -11,7 +11,7 @@ ProjectExample::ProjectExample()
 
 void ProjectExample::draw()
 {
-  auto drawList = ImGui::GetWindowDrawList();     // Get draw list for current window
+  //auto drawList = ImGui::GetWindowDrawList();     // Get draw list for current window
   const auto windowSize = ImGui::GetWindowSize(); // Get current window dimensions
   const auto windowPos = ImGui::GetWindowPos();   // Get current window position
 
@@ -31,16 +31,16 @@ void ProjectExample::draw()
   if (drawBox)
   {
     // Draw rect
-    drawList->AddRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, boxRounding, ImDrawCornerFlags_::ImDrawCornerFlags_All, boxThickness);
+    ImGui::RenderRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, boxRounding, ImDrawCornerFlags_::ImDrawCornerFlags_All, boxThickness);
   }
 
   if (drawCircle)
   {
     // Draw a sphere in the center
     if (const auto mousePos = ImGui::GetMousePos(); imgui_point_circle(mousePos, { windowHorizontalCenter, windowVerticalCenter }, circleRadius))
-      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, circleDivisions);
+      ImGui::RenderCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, circleDivisions);
     else 
-      drawList->AddCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, circleDivisions);
+      ImGui::RenderCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, circleDivisions);
   }
 }
 

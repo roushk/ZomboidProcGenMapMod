@@ -191,6 +191,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\imgui_render_lib.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -224,6 +225,7 @@
     <ClInclude Include="inc\enumerate.hpp" />
     <ClInclude Include="inc\imgui_disabled.hpp" />
     <ClInclude Include="inc\imgui_distance.hpp" />
+    <ClInclude Include="inc\imgui_render_lib.hpp" />
     <ClInclude Include="inc\pch.hpp" />
     <ClInclude Include="inc\project.hpp" />
     <ClInclude Include="inc\project_example.hpp" />
