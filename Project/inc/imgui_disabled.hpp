@@ -1,35 +1,38 @@
 #pragma once
 
 // Not a fan of this syntax, but it works and isn't too ugly I guess
-#define IMGUI_DISABLED(x) Disabled d(x); d
+#define IMGUI_DISABLED(x) ImGui::Disabled d(x); d
 
-class Disabled
+namespace ImGui
 {
-public:
-  Disabled(bool input)
-    : isDisabled(!input)
+  class Disabled
   {
-    if (isDisabled)
+  public:
+    Disabled(bool input)
+      : isDisabled(!input)
     {
-      ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-      ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+      if (isDisabled)
+      {
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+      }
     }
-  }
 
-  ~Disabled()
-  {
-    if (isDisabled)
+    ~Disabled()
     {
-      ImGui::PopItemFlag();
-      ImGui::PopStyleVar();
+      if (isDisabled)
+      {
+        ImGui::PopItemFlag();
+        ImGui::PopStyleVar();
+      }
     }
-  }
 
-  operator bool() const
-  {
-    return true;
-  }
+    operator bool() const
+    {
+      return true;
+    }
 
-private:
-  bool isDisabled;
-};
+  private:
+    bool isDisabled;
+  };
+}

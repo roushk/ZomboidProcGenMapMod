@@ -223,9 +223,12 @@
     <ClInclude Include="ext\imgui\imstb_truetype.h" />
     <ClInclude Include="inc\application.hpp" />
     <ClInclude Include="inc\enumerate.hpp" />
+    <ClInclude Include="inc\imgui_control_point.hpp" />
     <ClInclude Include="inc\imgui_disabled.hpp" />
     <ClInclude Include="inc\imgui_distance.hpp" />
     <ClInclude Include="inc\imgui_render_lib.hpp" />
+    <ClInclude Include="inc\inverse_lerp.hpp" />
+    <ClInclude Include="inc\map_range.hpp" />
     <ClInclude Include="inc\pch.hpp" />
     <ClInclude Include="inc\project.hpp" />
     <ClInclude Include="inc\project_example.hpp" />

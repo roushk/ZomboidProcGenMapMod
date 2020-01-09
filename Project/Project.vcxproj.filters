@@ -146,5 +146,14 @@
     <ClInclude Include="inc\imgui_render_lib.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
+    <ClInclude Include="inc\imgui_control_point.hpp">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\inverse_lerp.hpp">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\map_range.hpp">
+      <Filter>Lib</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 #pragma once
 #include "application.hpp"
 
+struct ControlPoint { float x = 1.f, y = 1.f; };
+
 class ProjectExample : public Project
 {
 public:
@@ -22,6 +24,7 @@ private:
   float circleRadius = 15.f;
   int circleDivisions = 128;
   bool showMousePosition = true;
+  std::vector<ControlPoint> controlPoints{ ControlPoint{2.5f, 1.f}, ControlPoint{5.f, 1.f}, ControlPoint{7.5f, 1.f} };
 
   // A set of solid colors for drawing onto a dark gray background
   const ImVec4 colorSoftLightGray = { 0.9f, 0.9f, 0.9f, 0.415f };

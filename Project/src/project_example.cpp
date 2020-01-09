@@ -3,45 +3,37 @@
 
 #include "imgui_distance.hpp"
 #include "imgui_disabled.hpp"
+#include "imgui_control_point.hpp"
 
 ProjectExample::ProjectExample()
 {
   reset();
+  ImGui::SetViewRect({ 0.f, 0.f }, { 10.f, 10.f });
 }
 
 void ProjectExample::draw()
 {
-  //auto drawList = ImGui::GetWindowDrawList();     // Get draw list for current window
-  const auto windowSize = ImGui::GetWindowSize(); // Get current window dimensions
-  const auto windowPos = ImGui::GetWindowPos();   // Get current window position
-
   // Basic colors that work well with the background
   const ImU32 boxColorPacked = ImGui::ColorConvertFloat4ToU32(colorSoftLightGray);
   const ImU32 circleColorPacked = ImGui::ColorConvertFloat4ToU32(colorSoftBlue);
   const ImU32 circleColorHighlightedPacked = ImGui::ColorConvertFloat4ToU32(colorSoftWhiteBlue);
 
-  const auto windowHorizontalCenter = windowSize.x * 0.5f + windowPos.x; // 50%, middle of screen
-  const auto windowLeftDrawBound = windowSize.x * 0.1f + windowPos.x; // 10% on left side of screen
-  const auto windowRightDrawBound = windowSize.x * 0.9f + windowPos.x; // 90% on right side of screen
-
-  const auto windowVerticalCenter = windowSize.y * 0.5f + windowPos.y; // 50%, middle of screen
-  const auto windowTopDrawBound = windowSize.y * 0.1f + windowPos.y; // 10% on left side of screen
-  const auto windowBottomDrawBound = windowSize.y * 0.9f + windowPos.y; // 90% on right side of screen
-
   if (drawBox)
   {
-    // Draw rect
-    ImGui::RenderRect({ windowLeftDrawBound, windowTopDrawBound }, { windowRightDrawBound, windowBottomDrawBound }, boxColorPacked, boxRounding, ImDrawCornerFlags_::ImDrawCornerFlags_All, boxThickness);
+    ImGui::RenderRect({ 1.f, 1.f }, { 9.f, 9.f }, boxColorPacked, boxRounding, ImDrawCornerFlags_All, boxThickness);
   }
 
   if (drawCircle)
   {
     // Draw a sphere in the center
-    if (const auto mousePos = ImGui::GetMousePos(); imgui_point_circle(mousePos, { windowHorizontalCenter, windowVerticalCenter }, circleRadius))
-      ImGui::RenderCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorHighlightedPacked, circleDivisions);
+    const auto sphereCenter = ImVec2{ 5.f, 5.f };
+    if (ImGui::PointCircle(ImGui::GetWorldPos(ImGui::GetMousePos()), sphereCenter, circleRadius))
+      ImGui::RenderCircleFilled(sphereCenter, circleRadius, circleColorHighlightedPacked, circleDivisions);
     else 
-      ImGui::RenderCircleFilled({ windowHorizontalCenter, windowVerticalCenter }, circleRadius, circleColorPacked, circleDivisions);
+      ImGui::RenderCircleFilled(sphereCenter, circleRadius, circleColorPacked, circleDivisions);
   }
+
+  ImGui::ControlPoints(controlPoints, circleRadius, circleColorPacked, circleColorHighlightedPacked, ImGuiControlPointFlags_FixX);
 }
 
 void ProjectExample::draw_editors()
