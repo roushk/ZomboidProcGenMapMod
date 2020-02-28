@@ -44,8 +44,8 @@ private:
   Project* currentProject = nullptr;
 
   bool running = true;
-  static int windowWidth;
-  static int windowHeight;
+  static inline int windowWidth = 800;
+  static inline int windowHeight = 600;
 
   bool performanceController = false;
 };

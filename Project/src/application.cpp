@@ -3,9 +3,6 @@
 
 #include "project_example.hpp"
 
-int Application::windowHeight = 600;
-int Application::windowWidth = 800;
-
 Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
   : window_instance(hInstance)
 {
