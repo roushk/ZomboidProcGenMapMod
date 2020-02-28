@@ -1,5 +1,7 @@
 Imgui Framework
 
+For use for MAT 300 projects at DigiPen Institute of Technology
+
 To create a new project, create a class that inherits from 'Project', located in project.hpp
 To add the project to the application, add it to the 'projects' vector in Application::init_projects() in application.cpp
 
