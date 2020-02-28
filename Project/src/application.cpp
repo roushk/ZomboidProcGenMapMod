@@ -58,8 +58,9 @@ Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-  //ImGuiIO& io = ImGui::GetIO(); (void)io;
-  //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+  ImGuiIO& io = ImGui::GetIO(); (void)io;
+  io.IniFilename = nullptr; // Disable automatic imgui ini file saving/loading of window locations and data
+  io.MouseDragThreshold = 1.f; // set mouse drag threshold (for dragging the control points)
 
   // Setup Platform/Renderer bindings
   ImGui_ImplWin32_Init(window_handle);

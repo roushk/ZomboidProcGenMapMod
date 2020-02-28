@@ -46,14 +46,17 @@ void ProjectExample::draw()
   // ControlPoints(...) returns true when a control point is actively being clicked and dragged around, and false otherwise
   if(ImGui::ControlPoints(controlPoints, circleRadius, circleColorPacked, circleColorHighlightedPacked, ImGuiControlPointFlags_AddAndRemoveWithMouse | ImGuiControlPointFlags_ClampXY))
   {
-    polynomial.resize((controlPoints.size() - 1) * quality);
-
-    for(auto n = 0; n < controlPoints.size() - 1; ++n)
+    if(!controlPoints.empty())
     {
-      for(auto i = n * quality; i < (n + 1) * quality; ++i)
+      polynomial.resize((controlPoints.size() - 1) * quality);
+
+      for(auto n = 0; n < controlPoints.size() - 1; ++n)
       {
-        const float t = static_cast<float>(i - n * quality) / (quality - 1);
-        polynomial[i] = catmullRomSpline(t, controlPoints[std::max(n - 1, 0)], controlPoints[n], controlPoints[n + 1], controlPoints[std::min(n + 2, static_cast<int>(controlPoints.size()) - 1)]);
+        for(auto i = n * quality; i < (n + 1) * quality; ++i)
+        {
+          const float t = static_cast<float>(i - n * quality) / (quality - 1);
+          polynomial[i] = catmullRomSpline(t, controlPoints[std::max(n - 1, 0)], controlPoints[n], controlPoints[n + 1], controlPoints[std::min(n + 2, static_cast<int>(controlPoints.size()) - 1)]);
+        }
       }
     }
   }
@@ -111,7 +114,7 @@ void ProjectExample::draw_menus()
 
 void ProjectExample::reset()
 {
-  circleRadius = 15.f;
+  circleRadius = 5.f;
   showMousePosition = true;
 
   controlPoints.clear();
