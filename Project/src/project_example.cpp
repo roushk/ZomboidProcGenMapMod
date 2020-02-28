@@ -5,17 +5,14 @@
 #include "imgui_control_point.hpp"
 
 // Pulled from https://www.lighthouse3d.com/tutorials/maths/catmull-rom-spline/
-float catmullRomSpline(float x, float v0, float v1,
-                        float v2, float v3) {
+float catmullRomSpline(float x, float v0, float v1, float v2, float v3)
+{
+  const float c1 = 1.0f * v1;
+  const float c2 = -0.5f * v0 + 0.5f * v2;
+  const float c3 = 1.0f * v0 + -2.5f * v1 + 2.0f * v2 + -0.5f * v3;
+  const float c4 = -0.5f * v0 + 1.5f * v1 + -1.5f * v2 + 0.5f * v3;
 
-  float c1, c2, c3, c4;
-
-  c1 = 1.0f * v1;
-  c2 = -0.5f * v0 + 0.5f * v2;
-  c3 = 1.0f * v0 + -2.5f * v1 + 2.0f * v2 + -0.5f * v3;
-  c4 = -0.5f * v0 + 1.5f * v1 + -1.5f * v2 + 0.5f * v3;
-
-  return(((c4*x + c3)*x + c2)*x + c1);
+  return ((c4 * x + c3) * x + c2) * x + c1;
 }
 
 // returns a value on the spline between v1 and v2, at value t in range [0, 1]
