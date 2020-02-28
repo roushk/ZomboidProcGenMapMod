@@ -1,8 +1,6 @@
 #pragma once
 #include "application.hpp"
 
-struct ControlPoint { float x = 1.f, y = 1.f; };
-
 class ProjectExample : public Project
 {
 public:
@@ -17,14 +15,15 @@ public:
   std::string name() final override;
 
 private:
-  bool drawBox = true, toggleDrawBox = true;
-  float boxRounding = 5.0f;
-  float boxThickness = 5.0f;
-  bool drawCircle = true, toggleDrawCircle = true;
-  float circleRadius = 15.f;
-  int circleDivisions = 128;
+  int quality = 20; // 20 line segments between each point
+  std::vector<ImVec2> polynomial;
+
+  float circleRadius = 5.f;
+  std::vector<ImVec2> controlPoints;
+
   bool showMousePosition = true;
-  std::vector<ControlPoint> controlPoints{ ControlPoint{2.5f, 1.f}, ControlPoint{5.f, 1.f}, ControlPoint{7.5f, 1.f} };
+  ImVec2 mouseScreenPos;
+  ImVec2 mouseWorldPos;
 
   // A set of solid colors for drawing onto a dark gray background
   const ImVec4 colorSoftLightGray = { 0.9f, 0.9f, 0.9f, 0.415f };
