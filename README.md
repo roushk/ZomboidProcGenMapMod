@@ -1,8 +1,2 @@
-Imgui Framework
+C++ cmdline Procedural map generator used for the game Project Zomboid. Also creating a DX11 IMGUI based interface for debugging and testing purposes. Found that the Zomboid WorldEd editor is open source so the bin file generation is GPL and can be copied so making an open source mod that uses the Zomboid mapping system to bring true procedurally generated maps to Project Zomboid. 
 
-For use for MAT 300 projects at DigiPen Institute of Technology
-
-To create a new project, create a class that inherits from 'Project', located in project.hpp
-To add the project to the application, add it to the 'projects' vector in Application::init_projects() in application.cpp
-
-For a simple example project that draws to the main drawable background, sets up a basic menu bar, and basic editor window, please look at project_example.hpp and project_example.cpp
