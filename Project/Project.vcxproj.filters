@@ -22,6 +22,9 @@
     <Filter Include="Lib">
       <UniqueIdentifier>{73bcdc02-c612-4004-a575-e3440ea2b706}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External Libraries\tinyxml2">
+      <UniqueIdentifier>{2ddccc79-4c47-4473-ba15-0d7419f3d9d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\imgui\imgui.cpp">
@@ -62,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="src\imgui_render_lib.cpp">
       <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\tinyxml2\xmltest.cpp">
+      <Filter>External Libraries\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\tinyxml2\tinyxml2.cpp">
+      <Filter>External Libraries\tinyxml2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="inc\map_range.hpp">
       <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\tinyxml2\tinyxml2.h">
+      <Filter>External Libraries\tinyxml2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
