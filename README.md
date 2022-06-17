@@ -3,3 +3,6 @@ C++ cmdline Procedural map generator used for the game Project Zomboid. Also cre
 
 Using TinyXML2 as XML reader/writer
 https://github.com/leethomason/tinyxml2
+
+Using STB for image read/write and CCL
+https://github.com/nothings/stb
