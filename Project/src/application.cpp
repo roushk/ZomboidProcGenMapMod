@@ -2,6 +2,8 @@
 #include "application.hpp"
 
 #include "project_example.hpp"
+#include "project_zomb_proc_gen.hpp"
+
 
 Application::Application(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
   : window_instance(hInstance)
@@ -210,7 +212,7 @@ float Application::draw_menu_bar()
 void Application::init_projects()
 {
   // Load projects here
-  projects.emplace_back(std::make_unique<ProjectExample>(ProjectExample{}));
+  projects.emplace_back(std::make_unique<ProjectZombProcGen>(ProjectZombProcGen{}));
   // projects.emplace_back(std::make_unique<Project1>(Project1{}));
   // projects.emplace_back(std::make_unique<Project2>(Project2{}));
   // ... etc

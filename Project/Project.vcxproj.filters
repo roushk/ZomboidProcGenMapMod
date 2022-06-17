@@ -25,6 +25,9 @@
     <Filter Include="External Libraries\tinyxml2">
       <UniqueIdentifier>{2ddccc79-4c47-4473-ba15-0d7419f3d9d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External Libraries\stb">
+      <UniqueIdentifier>{112e6037-1f3d-463f-9812-e86e6536e36f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\imgui\imgui.cpp">
@@ -66,11 +69,11 @@
     <ClCompile Include="src\imgui_render_lib.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="ext\tinyxml2\xmltest.cpp">
-      <Filter>External Libraries\tinyxml2</Filter>
-    </ClCompile>
     <ClCompile Include="ext\tinyxml2\tinyxml2.cpp">
       <Filter>External Libraries\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\project_zomb_proc_gen.cpp">
+      <Filter>Projects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +169,21 @@
     </ClInclude>
     <ClInclude Include="ext\tinyxml2\tinyxml2.h">
       <Filter>External Libraries\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\stb\stb_image.h">
+      <Filter>External Libraries\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\stb\stb_image_resize.h">
+      <Filter>External Libraries\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\stb\stb_image_write.h">
+      <Filter>External Libraries\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\stb\stb_connected_components.h">
+      <Filter>External Libraries\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\project_zomb_proc_gen.hpp">
+      <Filter>Projects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
