@@ -7,11 +7,21 @@
 #include <filesystem>
 #include <iostream>
 
-ProjectZombProcGen::ProjectZombProcGen()
+ProjectZombProcGen::ProjectZombProcGen(Application& _app) : app{ _app }
 {
   reset();
   ImGui::SetViewRect({ 0.f, 0.f }, { 10.f, 10.f });
   std::cout << std::filesystem::current_path();
+  app.createArrayTexture(&exRawData, &testBgTexView, &testBgTex);
+  app.createArrayTexture(&exRawData, &testVegTexView, &testVegTex);
+
+  for (int i = 0; i < 300; ++i)
+  {
+    for (int j = 0; j < 300; ++j)
+    {
+      exRawData.data[i][j] = 0b00000100;
+    }
+  }
 
 }
 
@@ -24,6 +34,25 @@ void ProjectZombProcGen::draw()
 
   mouseScreenPos = ImGui::GetMousePos();
   mouseWorldPos = ImGui::GetWorldPos(mouseScreenPos);
+
+  static float currDt = (1.0f / 60.0f);
+
+  for (int i = 1; i < 10; ++i)
+  {
+    for (int j = 1; j < 10; ++j)
+    {
+      byte leftSide = exRawData.data[i][j] & 0b11110000;
+      byte rightSide = exRawData.data[i][j] & 0b00001111;
+
+      exRawData.data[i][j] = rightSide | 0b00100000;
+    }
+  }
+
+  app.updateArrayTexture(&exRawData, testBgTex, Application::UpdateArraySetting::Background);
+  ImGui::Image((void*)testBgTexView, ImVec2( 300, 300 ));
+
+  app.updateArrayTexture(&exRawData, testVegTex, Application::UpdateArraySetting::Veg);
+  ImGui::Image((void*)testVegTexView, ImVec2(300, 300));
 }
 
 void ProjectZombProcGen::draw_editors()

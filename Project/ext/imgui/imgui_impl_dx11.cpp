@@ -228,6 +228,7 @@ void ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data)
         vtx_offset += cmd_list->VtxBuffer.Size;
     }
 
+
     // Restore modified DX state
     ctx->RSSetScissorRects(old.ScissorRectsCount, old.ScissorRects);
     ctx->RSSetViewports(old.ViewportsCount, old.Viewports);

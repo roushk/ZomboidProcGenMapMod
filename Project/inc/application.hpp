@@ -1,6 +1,8 @@
 #pragma once
 #include "project.hpp"
 
+struct CellBackgroundRawData;
+
 class Application
 {
 public:
@@ -18,6 +20,16 @@ public:
   {
     return windowHeight;
   }
+  
+  enum class UpdateArraySetting
+  {
+    Background,
+    Veg
+  };
+
+  HRESULT createArrayTexture(CellBackgroundRawData* cellData, ID3D11ShaderResourceView** m_textureView, ID3D11Texture2D** pTexture);
+  void updateArrayTexture(CellBackgroundRawData* cellData, ID3D11Texture2D* pTexture, const UpdateArraySetting setting);
+  //TODO Cleanup createArrayTexture Func
 
 private:
   float draw_menu_bar();

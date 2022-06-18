@@ -212,7 +212,7 @@ float Application::draw_menu_bar()
 void Application::init_projects()
 {
   // Load projects here
-  projects.emplace_back(std::make_unique<ProjectZombProcGen>(ProjectZombProcGen{}));
+  projects.emplace_back(std::make_unique<ProjectZombProcGen>(ProjectZombProcGen{*this}));
   // projects.emplace_back(std::make_unique<Project1>(Project1{}));
   // projects.emplace_back(std::make_unique<Project2>(Project2{}));
   // ... etc
@@ -241,12 +241,25 @@ HRESULT Application::create_device()
   sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
   UINT createDeviceFlags = 0;
-  //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#ifdef _DEBUG
+  createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
   D3D_FEATURE_LEVEL featureLevel;
-  const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
-  if (D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, 
-                                    swap_chain.GetAddressOf(), d3d_device.GetAddressOf(), &featureLevel, d3d_device_context.GetAddressOf()) != S_OK)
-    return E_FAIL;
+  const D3D_FEATURE_LEVEL featureLevelArray[4] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0, };
+  if (D3D11CreateDeviceAndSwapChain(nullptr, 
+    D3D_DRIVER_TYPE_HARDWARE, 
+    nullptr, 
+    createDeviceFlags, 
+    featureLevelArray, 
+    4, 
+    D3D11_SDK_VERSION, 
+    &sd, 
+    swap_chain.GetAddressOf(), 
+    d3d_device.GetAddressOf(), 
+    &featureLevel, 
+    d3d_device_context.GetAddressOf()) != S_OK)
+      return E_FAIL;
 
   {
     Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
@@ -352,3 +365,85 @@ LRESULT Application::win_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   // if we don't handle it, have the default win proc handle it
   return DefWindowProc(hWnd, msg, wParam, lParam);
 }
+
+//Specifying a dynamic texture to be used to draw to
+HRESULT Application::createArrayTexture(CellBackgroundRawData* cellData, ID3D11ShaderResourceView** m_textureView, ID3D11Texture2D** pTexture)
+{
+  *pTexture = NULL;
+  *m_textureView = NULL;
+
+  D3D11_TEXTURE2D_DESC desc;
+  desc.Width = cellData->cellSize;
+  desc.Height = cellData->cellSize;
+  desc.MipLevels = desc.ArraySize = 1;
+  desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  desc.SampleDesc.Count = 1;
+  desc.SampleDesc.Quality = 0;
+  desc.Usage = D3D11_USAGE_DYNAMIC;
+  desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+  desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+  desc.MiscFlags = NULL;
+  HRESULT result = d3d_device->CreateTexture2D(&desc, NULL, pTexture);
+
+  if (result != S_OK)
+    return result;
+
+  // Create texture view
+  D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+  ZeroMemory(&srvDesc, sizeof(srvDesc));
+  srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+  srvDesc.Texture2D.MipLevels = desc.MipLevels;
+  srvDesc.Texture2D.MostDetailedMip = 0;
+
+  result = d3d_device->CreateShaderResourceView(*pTexture, &srvDesc, m_textureView);
+
+  return result;
+}
+
+//Update the texture and sync CPU and GPU
+void Application::updateArrayTexture(CellBackgroundRawData* cellData, ID3D11Texture2D* pTexture, const UpdateArraySetting setting)
+{
+  //Update subresource good for rarer operations, map and unmap good for often
+  //d3d_device_context->UpdateSubresource(pTexture,D3D11CalcSubresource(0, 0, 1),nullptr, data, rowPitch, depthPitch);
+
+  D3D11_MAPPED_SUBRESOURCE resource;
+  HRESULT result = d3d_device_context->Map(pTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+  UCHAR* pTexels = (UCHAR*)resource.pData;
+
+  for (UINT row = 0; row < cellData->cellSize; row++)
+  {
+    UINT rowStart = row * resource.RowPitch;
+    for (UINT col = 0; col < cellData->cellSize; col++)
+    {
+      glm::ivec3 color = { 255, 255, 255 };
+
+      if (setting == UpdateArraySetting::Background)
+      {
+        //BG Data
+        //Take cell data at row,col and get that byte, & it with the relevent bits and cast to TileBackgroundData
+        ZomboidConstants::TileBackgroundData value = static_cast<ZomboidConstants::TileBackgroundData>(cellData->data[row][col] & 0b00001111);
+        color = ZomboidConstants::TileColors.at(value);
+      }
+      else
+      {
+        //veg Data
+        ZomboidConstants::TileVegData value = static_cast<ZomboidConstants::TileVegData>(cellData->data[row][col] & 0b11110000);
+        color = ZomboidConstants::VegColors.at(value);
+      }
+
+      UINT colStart = col * 4;
+      pTexels[rowStart + colStart + 0] = color.x; // Red
+      pTexels[rowStart + colStart + 1] = color.y; // Green
+      pTexels[rowStart + colStart + 2] = color.z;  // Blue
+      pTexels[rowStart + colStart + 3] = 255;  // Alpha
+    }
+  }
+
+  d3d_device_context->Unmap(pTexture, 0);
+}
+
+
+//TODO Cleanup createArrayTexture Func
+
