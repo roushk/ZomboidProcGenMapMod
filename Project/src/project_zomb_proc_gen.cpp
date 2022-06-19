@@ -4,6 +4,8 @@
 #include "enumerate.hpp"
 #include "imgui_control_point.hpp"
 
+#include <glm/gtc/noise.hpp>
+
 #include <filesystem>
 #include <iostream>
 
@@ -19,7 +21,31 @@ ProjectZombProcGen::ProjectZombProcGen(Application& _app) : app{ _app }
   {
     for (int j = 0; j < 300; ++j)
     {
-      exRawData.data[i][j] = 0b00000100;
+      float perlinScale = 2.0f;
+
+      // exRawData.data[i][j] = ZomboidConstants::Sand;
+      float perlin = 0.5f + (0.5f * glm::perlin(perlinScale * glm::vec2( exRawData.xPos + i / 300.0f, exRawData.yPos + j / 300.0f)));
+
+      if (perlin > 0 && perlin < 0.15f)
+      {
+        exRawData.data[i][j] = ZomboidConstants::Water | (exRawData.data[i][j] & ZomboidConstants::VegBitwiseMask);
+      }
+      else if (perlin >= 0.15f && perlin < 0.2f)
+      {
+        exRawData.data[i][j] = ZomboidConstants::Sand | (exRawData.data[i][j] & ZomboidConstants::VegBitwiseMask);
+      }
+      else if (perlin >= 0.2f && perlin < 0.5f)
+      {
+        exRawData.data[i][j] = ZomboidConstants::LightGrass | (exRawData.data[i][j] & ZomboidConstants::VegBitwiseMask);
+      }
+      else if (perlin >= 0.5f && perlin < 0.8f)
+      {
+        exRawData.data[i][j] = ZomboidConstants::MediumGrass | (exRawData.data[i][j] & ZomboidConstants::VegBitwiseMask);
+      }
+      else if (perlin >= 0.8f && perlin < 1.f)
+      {
+        exRawData.data[i][j] = ZomboidConstants::DarkGrass | (exRawData.data[i][j] & ZomboidConstants::VegBitwiseMask);
+      }
     }
   }
 
@@ -49,7 +75,7 @@ void ProjectZombProcGen::draw()
   }
 
   app.updateArrayTexture(&exRawData, testBgTex, Application::UpdateArraySetting::Background);
-  ImGui::Image((void*)testBgTexView, ImVec2( 300, 300 ));
+  ImGui::Image((void*)testBgTexView, ImVec2(300, 300));
 
   app.updateArrayTexture(&exRawData, testVegTex, Application::UpdateArraySetting::Veg);
   ImGui::Image((void*)testVegTexView, ImVec2(300, 300));

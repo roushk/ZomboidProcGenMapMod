@@ -5,12 +5,6 @@
 //Making single tile data super small so arrays of it are also small
 using TileData = byte;
 
-/*
-TileData operator=(const TileData& lhs, const TileData& rhs)
-{
-
-}
-*/
 class MapGenerator
 {
 public:
@@ -58,10 +52,11 @@ namespace ZomboidConstants
     LightLongGrass  = 0b01100000,
     GrassFewTrees   = 0b01110000,
     BushesGrassTree = 0b10000000, 
+    VegBitwiseMask  = 0b11110000
   };
 
   //Occupies bits 1-4
-  enum TileBackgroundData: byte
+  enum TileBackgroundData : byte
   {
     Tile_BG_None    = 0b00000000,
     DarkGrass       = 0b00000001,
@@ -75,6 +70,7 @@ namespace ZomboidConstants
     Dirt            = 0b00001001, 
     DirtGrass       = 0b00001010, 
     Water           = 0b00001011,
+    BGBitwiseMask   = 0b00001111
   };
 
   const static std::unordered_map<TileBackgroundData, const glm::ivec3> TileColors
