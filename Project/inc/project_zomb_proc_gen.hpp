@@ -5,15 +5,6 @@
 //Making single tile data super small so arrays of it are also small
 using TileData = byte;
 
-class MapGenerator
-{
-public:
-  MapGenerator(int numXCells = 1, int numYCells = 1) {};
-
-  int width;  //In cells
-  int height;
-};
-
 //Raw data of cells. 
 struct CellBackgroundRawData
 {
@@ -86,7 +77,7 @@ namespace ZomboidConstants
     { GravelDirt,       glm::ivec3(140, 70, 15)},
     { Dirt,             glm::ivec3(120,70, 20)},
     { DirtGrass,        glm::ivec3(80, 55, 20)},
-    { Water,            glm::ivec3(0, 138, 225)},  //Cannot walk on
+    { Water,            glm::ivec3(0, 138, 255)},  //Cannot walk on
   };
 
   //Static maps to easily get colors from data
@@ -103,6 +94,54 @@ namespace ZomboidConstants
     { BushesGrassTree,  glm::ivec3( 255, 0, 255 )},
   };
 }
+
+
+struct BackgroundRawDataView
+{
+  
+  ID3D11Texture2D* debugTex;
+  ID3D11ShaderResourceView* debugTexView;
+  bool isDirty = true;
+
+  CellBackgroundRawData& getData()
+  {
+    isDirty = true;
+    return data;
+  }
+  const CellBackgroundRawData& getData() const
+  {
+    return data;
+  }
+private:
+  CellBackgroundRawData data;
+};
+
+class MapGenerator
+{
+public:
+  MapGenerator();
+  void SetSize(Application& app, int numXCells, int numYCells);
+
+  //IMGUI UI
+  void DrawUI(Application& app);
+  void DrawMenu(Application& app);
+  void Perlin(float perlinNoiseScalar = 2.0f);
+
+  void ExportToPng();
+
+  std::vector<std::vector<BackgroundRawDataView>> mapRawData;
+
+  std::string MapName = "TestMap";
+  
+private:
+  //UI
+  int currentDebugChoice = 0;
+  glm::ivec2 currentMapChoice = { 0,0 };
+
+  //Info
+  int width;  //In cells
+  int height;
+};
 
 
 class ProjectZombProcGen : public Project
@@ -124,15 +163,15 @@ private:
   ImVec2 mouseScreenPos;
   ImVec2 mouseWorldPos;
 
-  MapGenerator gen;
+  MapGenerator mapGen;
 
-  ID3D11Texture2D* testBgTex;
-  ID3D11ShaderResourceView* testBgTexView;
-
-  ID3D11Texture2D* testVegTex;
-  ID3D11ShaderResourceView* testVegTexView;
+  //ID3D11Texture2D* testBgTex;
+  //ID3D11ShaderResourceView* testBgTexView;
+  //ID3D11Texture2D* testVegTex;
+  //ID3D11ShaderResourceView* testVegTexView;
 
   CellBackgroundRawData exRawData;
+
   //std::unordered_map<Cell&, > CellImages;
 
   // A set of solid colors for drawing onto a dark gray background

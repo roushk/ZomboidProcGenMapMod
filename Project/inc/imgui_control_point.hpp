@@ -44,7 +44,7 @@ namespace ImGui
       const auto controlPointLocation = ImVec2{ x, y };
 
       // set node color to lighter color if it's selected
-      if (ImGui::PointCircle(ImGui::GetWorldPos(ImGui::GetMousePos()), controlPointLocation, radius) && !ImGui::IsMouseDragging())
+      if (ImGui::PointCircle(ImGui::GetWorldPos(ImGui::GetMousePos()), controlPointLocation, radius) && !ImGui::IsMouseDragging(0))
       {
         noneSelected = false;
         if (!selectedControlPoint)
@@ -77,7 +77,7 @@ namespace ImGui
       if (selectedControlPoint == &controlPoint)
       {
         // if we have a selected node and are currently clicking and dragging
-        if (ImGui::IsMouseDragging())
+        if (ImGui::IsMouseDragging(0))
         {
           // move the node by the drag y amount
           const auto dragDelta = ImGui::GetWorldPos(ImGui::GetMouseDragDelta());

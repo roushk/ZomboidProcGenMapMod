@@ -81,6 +81,9 @@
     <ClCompile Include="ext\glm\detail\glm.cpp">
       <Filter>External Libraries\glm</Filter>
     </ClCompile>
+    <ClCompile Include="ext\imgui\imgui_tables.cpp">
+      <Filter>External Libraries\Dear ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ext\imgui\imgui.h">
