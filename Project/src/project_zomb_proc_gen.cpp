@@ -34,7 +34,7 @@ ProjectZombProcGen::ProjectZombProcGen(Application& _app) : app{ _app }
   //app.createArrayTexture(&exRawData, &testBgTexView, &testBgTex);
   //app.createArrayTexture(&exRawData, &testVegTexView, &testVegTex);
 
-  mapGen.SetSize(app, 2, 2);
+  mapGen.SetSize(app, 20, 20);
   mapGen.Perlin();
 }
 
@@ -47,19 +47,6 @@ void ProjectZombProcGen::draw()
 
   mouseScreenPos = ImGui::GetMousePos();
   mouseWorldPos = ImGui::GetWorldPos(mouseScreenPos);
-
-  static float currDt = (1.0f / 60.0f);
-
-  for (int i = 1; i < 10; ++i)
-  {
-    for (int j = 1; j < 10; ++j)
-    {
-      byte leftSide = exRawData.data[i][j] & 0b11110000;
-      byte rightSide = exRawData.data[i][j] & 0b00001111;
-
-      exRawData.data[i][j] = rightSide | 0b00100000;
-    }
-  }
 
   mapGen.DrawUI(app);
 
@@ -210,43 +197,42 @@ void MapGenerator::Perlin(float perlinNoiseScalar)
 
           if (perlin > 0 && perlin < 0.15f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::Water | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::Water);
           }
           else if (perlin >= 0.15f && perlin < 0.2f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::Sand | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::Sand);
           }
           else if (perlin >= 0.2f && perlin < 0.5f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::LightGrass | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::LightGrass);
           }
           else if (perlin >= 0.5f && perlin < 0.8f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::MediumGrass | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::MediumGrass);
           }
           else if (perlin >= 0.8f && perlin < 1.f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::DarkGrass | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::DarkGrass);
           }
 
           //Separate scale but same perlin noise map for trees
           if (perlin >= 0.3f && perlin < 0.4f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::GrassAllTypes | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::GrassAllTypes);
           }
           if (perlin >= 0.4f && perlin < 0.6f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::GrassFewTrees | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::GrassFewTrees);
           }
           else if (perlin >= 0.6f && perlin < 0.7f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::MedTrees | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::MedTrees);
           }
           else if (perlin >= 0.7f && perlin < 1.f)
           {
-            mapRawData[x][y].getData().data[i][j] = ZomboidConstants::DenseTrees | (mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask);
+            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::DenseTrees);
           }
-
         }
       }
     }
@@ -255,7 +241,7 @@ void MapGenerator::Perlin(float perlinNoiseScalar)
 
 void MapGenerator::ExportToPng()
 {
-  uint8_t pngData[300 * 300 * 3];
+  uint8_t* pngData = new uint8_t[300 * 300 * 3];
   std::string directory = "..\\Assets\\test\\" + MapName;
   std::filesystem::create_directory(directory);
 
@@ -275,8 +261,8 @@ void MapGenerator::ExportToPng()
           //and the important side to ignore non important values and get the color and put into data for png
           glm::ivec3 color = ZomboidConstants::TileColors.at(static_cast<ZomboidConstants::TileBackgroundData>(mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask));
           pngData[i * 300 * 3 + j * 3] = color.x;
-          pngData[i * 300 * 3+ j * 3 + 1] = color.y;
-          pngData[i * 300 * 3+ j * 3 + 2] = color.z;
+          pngData[i * 300 * 3 + j * 3 + 1] = color.y;
+          pngData[i * 300 * 3 + j * 3 + 2] = color.z;
         }
       }
       int result = stbi_write_bmp(imageName.c_str(), 300,300, 3, pngData);
@@ -305,13 +291,14 @@ void MapGenerator::ExportToPng()
       int result = stbi_write_bmp(imageName.c_str(), 300, 300, 3, pngData);
     }
   }
+  delete pngData;
 }
 
 void MapGenerator::DrawUI(Application& app)
 {
   ImGui::BeginChild("##VisibleMap", { 0, 0 }, false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
   
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+  //ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(1.01f, 1.01f)); //1.0f = no spacing
 
   static int lastDebugChoice = 0;
@@ -332,8 +319,7 @@ void MapGenerator::DrawUI(Application& app)
         ImGui::SameLine();
     }
   }
-  ImGui::PopStyleVar(2);
-
+  ImGui::PopStyleVar(1);
   ImGui::EndChild();
 
   lastDebugChoice = currentDebugChoice;

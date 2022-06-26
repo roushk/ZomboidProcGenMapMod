@@ -5,23 +5,6 @@
 //Making single tile data super small so arrays of it are also small
 using TileData = byte;
 
-//Raw data of cells. 
-struct CellBackgroundRawData
-{
-  const int cellSize = 300; //width and height are both 300
-  //X and Y pos of cell in world
-  int xPos = 0;
-  int yPos = 0;
-
-  TileData data[300][300]{ 0 };  //90 kb
-};
-
-class SparseCellData
-{
-  //Figure out way to generate sparse
-  //std::unordered_map<glm::ivec2, 
-};
-
 //Place for those constant zomboid constants such as cell size and pixel data info
 namespace ZomboidConstants
 {
@@ -34,34 +17,34 @@ namespace ZomboidConstants
   //Occupies bits 5-8
   enum TileVegData : byte
   {
-    Tile_VEG_None   = 0b00000000,
-    OnlyTrees       = 0b00010000,
-    DenseTrees      = 0b00100000,
-    MedTrees        = 0b00110000,
-    FirTrees        = 0b01000000,
-    GrassAllTypes   = 0b01010000,
-    LightLongGrass  = 0b01100000,
-    GrassFewTrees   = 0b01110000,
-    BushesGrassTree = 0b10000000, 
-    VegBitwiseMask  = 0b11110000
+    Tile_VEG_None = 0b00000000,
+    OnlyTrees = 0b00010000,
+    DenseTrees = 0b00100000,
+    MedTrees = 0b00110000,
+    FirTrees = 0b01000000,
+    GrassAllTypes = 0b01010000,
+    LightLongGrass = 0b01100000,
+    GrassFewTrees = 0b01110000,
+    BushesGrassTree = 0b10000000,
+    VegBitwiseMask = 0b11110000
   };
 
   //Occupies bits 1-4
   enum TileBackgroundData : byte
   {
-    Tile_BG_None    = 0b00000000,
-    DarkGrass       = 0b00000001,
-    MediumGrass     = 0b00000010,
-    LightGrass      = 0b00000011,
-    Sand            = 0b00000100,
-    LightAsphalt    = 0b00000101,
-    DarkAsphalt     = 0b00000110,
-    MediumAsphalt   = 0b00000111,
-    GravelDirt      = 0b00001000,
-    Dirt            = 0b00001001, 
-    DirtGrass       = 0b00001010, 
-    Water           = 0b00001011,
-    BGBitwiseMask   = 0b00001111
+    Tile_BG_None = 0b00000000,
+    DarkGrass = 0b00000001,
+    MediumGrass = 0b00000010,
+    LightGrass = 0b00000011,
+    Sand = 0b00000100,
+    LightAsphalt = 0b00000101,
+    DarkAsphalt = 0b00000110,
+    MediumAsphalt = 0b00000111,
+    GravelDirt = 0b00001000,
+    Dirt = 0b00001001,
+    DirtGrass = 0b00001010,
+    Water = 0b00001011,
+    BGBitwiseMask = 0b00001111
   };
 
   const static std::unordered_map<TileBackgroundData, const glm::ivec3> TileColors
@@ -84,16 +67,49 @@ namespace ZomboidConstants
   const static std::unordered_map<TileVegData, const glm::ivec3> VegColors
   {
     { Tile_VEG_None,    glm::ivec3(0, 0, 0)},
-    { OnlyTrees,        glm::ivec3( 255, 0, 0 )},  //Basically never use
-    { DenseTrees,       glm::ivec3( 200, 0, 0 )},
-    { MedTrees,         glm::ivec3( 127, 0, 0 )},
-    { FirTrees,         glm::ivec3( 64, 0, 0 )},
-    { GrassAllTypes,    glm::ivec3( 0, 255, 0 )},
-    { LightLongGrass,   glm::ivec3( 0, 255, 0 )},
-    { GrassFewTrees,    glm::ivec3( 0, 128, 0 )},
-    { BushesGrassTree,  glm::ivec3( 255, 0, 255 )},
+    { OnlyTrees,        glm::ivec3(255, 0, 0)},  //Basically never use
+    { DenseTrees,       glm::ivec3(200, 0, 0)},
+    { MedTrees,         glm::ivec3(127, 0, 0)},
+    { FirTrees,         glm::ivec3(64, 0, 0)},
+    { GrassAllTypes,    glm::ivec3(0, 255, 0)},
+    { LightLongGrass,   glm::ivec3(0, 255, 0)},
+    { GrassFewTrees,    glm::ivec3(0, 128, 0)},
+    { BushesGrassTree,  glm::ivec3(255, 0, 255)},
   };
 }
+
+//Raw data of cells. 
+struct CellBackgroundRawData
+{
+  static const int cellSize = 300; //width and height are both 300
+  //X and Y pos of cell in world
+  int xPos = 0;
+  int yPos = 0;
+
+  void SetTile(unsigned x, unsigned y, const ZomboidConstants::TileVegData& vegData)
+  {
+    data[x][y] = vegData | (data[x][y] & ZomboidConstants::BGBitwiseMask);
+  }
+
+  void SetTile(unsigned x, unsigned y, const ZomboidConstants::TileBackgroundData& bgData)
+  {
+    data[x][y] = bgData | (data[x][y] & ZomboidConstants::VegBitwiseMask);
+  }
+  
+  void SetTileZombAmount(unsigned x, unsigned y, uint8_t zombAmount)
+  {
+    zombData[x][y] = zombAmount;
+  }
+
+  TileData data[cellSize][cellSize]{ 0 };  //90 kb
+  uint8_t zombData[30][30]{ 0 };
+};
+
+class SparseCellData
+{
+  //Figure out way to generate sparse
+  //std::unordered_map<glm::ivec2, 
+};
 
 
 struct BackgroundRawDataView
