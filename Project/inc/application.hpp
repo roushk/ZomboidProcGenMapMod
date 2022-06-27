@@ -24,7 +24,8 @@ public:
   enum class UpdateArraySetting
   {
     Background,
-    Veg
+    Veg,
+    Debug
   };
 
   HRESULT createArrayTexture(CellBackgroundRawData* cellData, ID3D11ShaderResourceView** m_textureView, ID3D11Texture2D** pTexture);

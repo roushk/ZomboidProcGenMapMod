@@ -34,7 +34,7 @@ ProjectZombProcGen::ProjectZombProcGen(Application& _app) : app{ _app }
   //app.createArrayTexture(&exRawData, &testBgTexView, &testBgTex);
   //app.createArrayTexture(&exRawData, &testVegTexView, &testVegTex);
 
-  mapGen.SetSize(app, 20, 20);
+  mapGen.SetSize(app, 5, 5);
   mapGen.Perlin();
 }
 
@@ -78,7 +78,6 @@ void ProjectZombProcGen::draw_editors()
         ImGui::Text(fmt::format("Mouse Screen Space Coordinates: {0}, {1}", mouseScreenPos.x, mouseScreenPos.y).c_str());
         ImGui::Text(fmt::format("Mouse World Space Coordinates:  {0}, {1}", mouseWorldPos.x, mouseWorldPos.y).c_str());
       }
-
       // Get window size for next drawing
       windowSize = ImGui::GetWindowSize(); // A little hacky, but it works
     }
@@ -147,20 +146,51 @@ void MapGenerator::SetSize(Application& app, int numXCells, int numYCells)
 void MapGenerator::DrawMenu(Application& app)
 {
 
-  if (ImGui::BeginMenu("Debug Settings"))
+  if (ImGui::BeginMenu("Map View"))
   {
-    if (ImGui::MenuItem("Debug View: Background Color"))
+    if (ImGui::MenuItem("Background Color", 0, currentDebugChoice == 0))
     {
       currentDebugChoice = 0;
     }
-    if (ImGui::MenuItem("Debug View: Vegetation Color"))
+    if (ImGui::MenuItem("Vegetation Color", 0, currentDebugChoice == 1))
     {
       currentDebugChoice = 1;
     }
-    if (ImGui::MenuItem("Regenerate Perlin Noise"))
+    if (ImGui::MenuItem("Debug Color", 0, currentDebugChoice == 2))
+    {
+      currentDebugChoice = 2;
+    }
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu("Map Settings"))
+  {
+    if (ImGui::MenuItem("Regenerate Background and Veg via Perlin Noise"))
     {
       Perlin();
     }
+
+    //TODO: number of points, min/max cell, select distance
+    if (ImGui::MenuItem("Generate Voronoi Diagrams"))
+    {
+      voronoiPoints.clear();
+      for (int i = 0; i < numCities; ++i)
+      {
+        int randX = (std::rand() % 60) * 5;
+        int randY = (std::rand() % 60) * 5;
+        voronoiPoints.push_back({ randX, randY });
+      }
+
+      VoronoiDiagram(0, 0, voronoiPoints, VoronoiDiagram::EuclidianDist);
+      VoronoiDiagram(0, 1, voronoiPoints, VoronoiDiagram::ChebyshevDist);
+      VoronoiDiagram(0, 2, voronoiPoints, VoronoiDiagram::ManhattanDist);
+    }
+    ImGui::DragInt("Num Cities", &numCities, 0.1f, 1, ZConsts::Color_MAX - 1);
+
+    ImGui::EndMenu();
+  }
+
+  if (ImGui::BeginMenu("Export Settings"))
+  {
     if (ImGui::MenuItem("Export BG and Veg to Images"))
     {
       ExportToPng();
@@ -197,42 +227,73 @@ void MapGenerator::Perlin(float perlinNoiseScalar)
 
           if (perlin > 0 && perlin < 0.15f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::Water);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::Water);
           }
-          else if (perlin >= 0.15f && perlin < 0.2f)
+          else if (perlin >= 0.15f && perlin < 0.18f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::Sand);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::Sand);
           }
-          else if (perlin >= 0.2f && perlin < 0.5f)
+          else if (perlin >= 0.18f && perlin < 0.5f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::LightGrass);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::LightGrass);
           }
           else if (perlin >= 0.5f && perlin < 0.8f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::MediumGrass);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::MediumGrass);
           }
           else if (perlin >= 0.8f && perlin < 1.f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::DarkGrass);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::DarkGrass);
           }
 
           //Separate scale but same perlin noise map for trees
-          if (perlin >= 0.3f && perlin < 0.4f)
+          if (perlin >= 0.2f && perlin < 0.4f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::GrassAllTypes);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::GrassAllTypes);
           }
           if (perlin >= 0.4f && perlin < 0.6f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::GrassFewTrees);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::GrassFewTrees);
           }
           else if (perlin >= 0.6f && perlin < 0.7f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::MedTrees);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::MedTrees);
           }
           else if (perlin >= 0.7f && perlin < 1.f)
           {
-            mapRawData[x][y].getData().SetTile(i, j, ZomboidConstants::DenseTrees);
+            mapRawData[x][y].getData().SetTile(i, j, ZConsts::DenseTrees);
           }
+        }
+      }
+    }
+  }
+}
+
+
+//https://en.wikipedia.org/wiki/Voronoi_diagram
+//Inefficient naive implementation
+//There is one called Fortunes but not sure if its faster for grid based
+
+inline void MapGenerator::VoronoiDiagram(CellCoord x, CellCoord y, std::vector<glm::ivec2> points, VoronoiDiagram::VoronoiDiagramDistFuncs func)
+{
+  BackgroundRawDataView& cell = mapRawData[x][y];
+  std::function<double(glm::ivec2, glm::ivec2)> distFunc = VoronoiDiagram::VoronoiFuncs.at(func);
+
+  for (int i = 0; i < ZConsts::cellSize; ++i)
+  {
+    for (int j = 0; j < ZConsts::cellSize; ++j)
+    {
+      float minDist = std::numeric_limits<float>::max();
+
+      for (unsigned k = 0; k < points.size(); ++k)
+      {
+        //Get distance function
+        float dist = distFunc(glm::ivec2(i, j), points[k]);
+
+        if (dist < minDist)
+        {
+          minDist = dist;
+          cell.getData().data[i][j] = k;
         }
       }
     }
@@ -259,7 +320,7 @@ void MapGenerator::ExportToPng()
         for (int j = 0; j < 300; ++j)
         {
           //and the important side to ignore non important values and get the color and put into data for png
-          glm::ivec3 color = ZomboidConstants::TileColors.at(static_cast<ZomboidConstants::TileBackgroundData>(mapRawData[x][y].getData().data[i][j] & ZomboidConstants::BGBitwiseMask));
+          glm::ivec3 color = ZConsts::TileColors.at(static_cast<ZConsts::TileBackgroundData>(GetTile(x, y, i, j) & ZConsts::BGBitwiseMask));
           pngData[i * 300 * 3 + j * 3] = color.x;
           pngData[i * 300 * 3 + j * 3 + 1] = color.y;
           pngData[i * 300 * 3 + j * 3 + 2] = color.z;
@@ -282,7 +343,7 @@ void MapGenerator::ExportToPng()
       {
         for (int j = 0; j < 300; ++j)
         {
-          glm::ivec3 color = ZomboidConstants::VegColors.at(static_cast<ZomboidConstants::TileVegData>(mapRawData[x][y].getData().data[i][j] & ZomboidConstants::VegBitwiseMask));
+          glm::ivec3 color = ZConsts::VegColors.at(static_cast<ZConsts::TileVegData>(GetTile(x,y,i,j) & ZConsts::VegBitwiseMask));
           pngData[i * 300 * 3 + j * 3] = color.x;
           pngData[i * 300 * 3 + j * 3 + 1] = color.y;
           pngData[i * 300 * 3 + j * 3 + 2] = color.z;
@@ -296,6 +357,7 @@ void MapGenerator::ExportToPng()
 
 void MapGenerator::DrawUI(Application& app)
 {
+  
   ImGui::BeginChild("##VisibleMap", { 0, 0 }, false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
   
   //ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -320,6 +382,23 @@ void MapGenerator::DrawUI(Application& app)
     }
   }
   ImGui::PopStyleVar(1);
+
+  //00, 01, 02
+  for (int i = 0; i < voronoiPoints.size(); ++i)
+  {
+    ImGui::RenderCircleFilled(ImGui::GetWorldPos(glm::ivec2(voronoiPoints[i].y, voronoiPoints[i].x) + glm::ivec2(10, 25)), 10.0f, ImGui::ColorConvertFloat4ToU32(colorSoftLightGray));
+  }
+
+  for (int i = 0; i < voronoiPoints.size(); ++i)
+  {
+    ImGui::RenderCircleFilled(ImGui::GetWorldPos(glm::ivec2(voronoiPoints[i].y, voronoiPoints[i].x) + glm::ivec2(300, 0) + glm::ivec2(10,25)), 10.0f, ImGui::ColorConvertFloat4ToU32(colorSoftBlue));
+  }
+
+  for (int i = 0; i < voronoiPoints.size(); ++i)
+  {
+    ImGui::RenderCircleFilled(ImGui::GetWorldPos(glm::ivec2(voronoiPoints[i].y, voronoiPoints[i].x) + glm::ivec2(600, 0) + glm::ivec2(10, 25)), 10.0f, ImGui::ColorConvertFloat4ToU32(colorSoftWhiteBlue));
+  }
+
   ImGui::EndChild();
 
   lastDebugChoice = currentDebugChoice;

@@ -373,8 +373,8 @@ HRESULT Application::createArrayTexture(CellBackgroundRawData* cellData, ID3D11S
   *m_textureView = NULL;
 
   D3D11_TEXTURE2D_DESC desc;
-  desc.Width = cellData->cellSize;
-  desc.Height = cellData->cellSize;
+  desc.Width = ZConsts::cellSize;
+  desc.Height = ZConsts::cellSize;
   desc.MipLevels = desc.ArraySize = 1;
   desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
   desc.SampleDesc.Count = 1;
@@ -412,10 +412,10 @@ void Application::updateArrayTexture(CellBackgroundRawData* cellData, ID3D11Text
 
   UCHAR* pTexels = (UCHAR*)resource.pData;
 
-  for (UINT row = 0; row < cellData->cellSize; row++)
+  for (UINT row = 0; row < ZConsts::cellSize; row++)
   {
     UINT rowStart = row * resource.RowPitch;
-    for (UINT col = 0; col < cellData->cellSize; col++)
+    for (UINT col = 0; col < ZConsts::cellSize; col++)
     {
       glm::ivec3 color = { 255, 255, 255 };
 
@@ -423,14 +423,31 @@ void Application::updateArrayTexture(CellBackgroundRawData* cellData, ID3D11Text
       {
         //BG Data
         //Take cell data at row,col and get that byte, & it with the relevent bits and cast to TileBackgroundData
-        ZomboidConstants::TileBackgroundData value = static_cast<ZomboidConstants::TileBackgroundData>(cellData->data[row][col] & 0b00001111);
-        color = ZomboidConstants::TileColors.at(value);
+        ZConsts::TileBackgroundData value = static_cast<ZConsts::TileBackgroundData>(cellData->data[row][col] & 0b00001111);
+
+        if (ZConsts::TileColors.find(value) == ZConsts::TileColors.end())
+          color = ZConsts::TileColors.at(ZConsts::Tile_BG_None);
+        else
+          color = ZConsts::TileColors.at(value);
       }
-      else
+      else if (setting == UpdateArraySetting::Veg)
       {
         //veg Data
-        ZomboidConstants::TileVegData value = static_cast<ZomboidConstants::TileVegData>(cellData->data[row][col] & 0b11110000);
-        color = ZomboidConstants::VegColors.at(value);
+        ZConsts::TileVegData value = static_cast<ZConsts::TileVegData>(cellData->data[row][col] & 0b11110000);
+
+        if (ZConsts::VegColors.find(value) == ZConsts::VegColors.end())
+          color = ZConsts::VegColors.at(ZConsts::Tile_VEG_None);
+        else
+          color = ZConsts::VegColors.at(value);
+      }
+      else if (setting == UpdateArraySetting::Debug)
+      {
+        //debug Data
+        byte value = static_cast<ZConsts::TileDebugColors>(cellData->data[row][col]);
+        if (ZConsts::DebugColorsMap.find(value) == ZConsts::DebugColorsMap.end())
+          color = ZConsts::DebugColorsMap.at(0);
+        else
+          color = ZConsts::DebugColorsMap.at(value);
       }
 
       UINT colStart = col * 4;
