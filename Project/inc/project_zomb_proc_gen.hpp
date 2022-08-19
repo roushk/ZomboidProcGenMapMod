@@ -263,6 +263,26 @@ private:
   CellBackgroundRawData data;
 };
 
+namespace DelTri
+{
+  class Tri
+  {
+  public:
+    //Points a,b,c that define triangle, specifically integers
+    glm::ivec2 a;
+    glm::ivec2 b;
+    glm::ivec2 c;
+    Circle GetCircumcircle();
+    //Circumcircle
+  };
+
+  struct Circle
+  {
+    glm::vec2 center;
+    float radius;
+  };
+}
+
 //Entire map class, contains interfaces for directly editing cells and tiles.
 //Also includes general functions for manipulating the map and exporting it
 class MapGenerator
@@ -279,8 +299,9 @@ public:
   //https://en.wikipedia.org/wiki/Voronoi_diagram
   //Inefficient naive implementation
   //There is one called Fortunes but not sure if its faster for grid based
-  void VoronoiDiagram(CellCoord x, CellCoord y, std::vector<glm::ivec2> points, VoronoiDiagram::VoronoiDiagramDistFuncs func);
+  void VoronoiDiagram(CellCoord x, CellCoord y, const std::vector<glm::ivec2>& points, VoronoiDiagram::VoronoiDiagramDistFuncs func);
 
+  void DelTri_BowyerWatson(CellCoord x, CellCoord y, const std::vector<glm::ivec2>& points);
   void ExportToPng();
 
   std::vector<std::vector<BackgroundRawDataView>> mapRawData;
