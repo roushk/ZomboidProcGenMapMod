@@ -450,5 +450,5 @@ DelTri::Circle DelTri::Tri::GetCircumcircle()
 {
   glm::vec2 AC = c - a;
 
-  glm::vec2 normalAC
+  //glm::vec2 normalAC;
 }

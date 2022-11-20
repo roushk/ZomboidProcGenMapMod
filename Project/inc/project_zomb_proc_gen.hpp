@@ -265,6 +265,12 @@ private:
 
 namespace DelTri
 {
+  struct Circle
+  {
+    glm::vec2 center;
+    float radius;
+  };
+
   class Tri
   {
   public:
@@ -274,12 +280,6 @@ namespace DelTri
     glm::ivec2 c;
     Circle GetCircumcircle();
     //Circumcircle
-  };
-
-  struct Circle
-  {
-    glm::vec2 center;
-    float radius;
   };
 }
 
